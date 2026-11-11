@@ -1,15 +1,16 @@
 <?php
-// Database configuration parameters for XAMPP
-define('DB_SERVER', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', ''); // Default XAMPP password is empty
-define('DB_NAME', 'shoes_store');
-
-// Establish MySQL connection
-$conn = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
-
-// Verify database connection state
+// Local PHP/MySQL demonstration configuration. Set environment values on real hosts.
+// Development defaults target a local XAMPP instance only; never use root/blank credentials publicly.
+mysqli_report(MYSQLI_REPORT_OFF);
+$host = getenv("DB_HOST") ?: "127.0.0.1";
+$username = getenv("DB_USER") ?: "root";
+$password = getenv("DB_PASSWORD");
+$password = $password === false ? "" : $password;
+$database = getenv("DB_NAME") ?: "shoes_store";
+$conn = @mysqli_connect($host, $username, $password, $database);
 if (!$conn) {
-    die("Database Connection Error: " . mysqli_connect_error());
+    http_response_code(503);
+    error_log("Sumitra store DB connection unavailable");
+    exit("Catalog temporarily unavailable. Check local database configuration.");
 }
-?>
+mysqli_set_charset($conn, "utf8mb4");
