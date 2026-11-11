@@ -35,11 +35,7 @@ CREATE TABLE IF NOT EXISTS orders (
     transaction_id VARCHAR(255) NOT NULL
 );
 
--- Insert a default Administrator (Password is "admin123")
--- Hash generated via password_hash('admin123', PASSWORD_DEFAULT)
-INSERT INTO admins (username, password) VALUES 
-('admin', '$2y$10$w8.3f619g7.a.v/A17pGpe0G4BfFqG9Q.yY2A7D8u1g3u0y.S63d6')
-ON DUPLICATE KEY UPDATE username=username;
+-- No default administrator credentials are seeded. Admin login is not implemented.
 
 -- Insert premium shoe listings for immediate testing in XAMPP htdocs
 INSERT INTO products (name, price, image, category) VALUES
