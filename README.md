@@ -1,78 +1,41 @@
-# Sumitra Shoes Centre - E-Commerce Project Report & Setup Guide
+# Sumitra Shoes Centre — Footwear Store Prototype
 
-This is a complete, industry-standard E-Commerce Web Application for an online shoe store called **Sumitra Shoes Centre**. It has been fully engineered using **PHP** for the backend, **MySQL** for the database, and **HTML5, CSS3, and JavaScript** for a modern, responsive, and minimalist frontend.
+**A responsive storefront showcase with a PHP/MySQL local demo.**
 
-## 🛠️ Project Architecture
-The project follows a standard **Client-Server Architecture**:
-1. **Frontend**: Client-side interface for customers to browse shoes, manage the cart, and securely checkout via Esewa or Khalti. Includes an interactive Admin Control Panel for catalog management.
-2. **Backend**: Server-side PHP scripts managing session persistence, secure authentication (using strong blowfish password hashing), and transaction tracking.
-3. **Database**: MySQL database structure storing relational entries for users, administrators, products, and historic order logs.
+## Two project modes
 
----
+### 1. Browser-based lookbook
 
-## 🗄️ Database Schema Design
-The relational schema comprises 4 key tables detailed below. Paste this SQL in your phpMyAdmin to initialize the system.
+The root `index.html` is an interactive **static catalogue preview** for GitHub Pages. It contains local illustrative footwear art, six sample products, keyword search, category filters, and links to source documentation. **It does not sell products or accept payments.**
 
-### 1. `users` (Customer Accounts)
-Stores customer profiles with salt-hashed passwords.
-* `id` (INT, Primary Key, Auto Increment)
-* `username` (VARCHAR(50), Unique)
-* `email` (VARCHAR(100), Unique)
-* `password` (VARCHAR(255)) - Encrypted via `password_hash()`
+To preview locally: `python -m http.server 8000 --bind 127.0.0.1` then open `http://127.0.0.1:8000`.
 
-### 2. `admins` (System Admin Roles)
-Stores administrative authentications for CRUD privileges.
-* `id` (INT, Primary Key, Auto Increment)
-* `username` (VARCHAR(50), Unique)
-* `password` (VARCHAR(255)) - Encrypted
+### 2. PHP/MySQL development store
 
-### 3. `products` (Shoe Inventory Catalog)
-Stores footwear lines, prices, and visual media tags.
-* `id` (INT, Primary Key, Auto Increment)
-* `name` (VARCHAR(100))
-* `price` (DECIMAL(10,2))
-* `image` (VARCHAR(255)) - Path or URL to the shoe image
-* `category` (VARCHAR(50)) - Sneakers, Sports, Formal, Casual
+The PHP prototype supports a catalog, account registration/login, session cart, quantity adjustments, and **unpaid demo order requests**. Its checkout does **not** contact eSewa, Khalti, Fonepay, banks, or credit card networks; it does not verify payment. An order is recorded using an `UNPAID-DEMO-` reference. **Never send funds or enter real transaction IDs for this demonstration.**
 
-### 4. `orders` (Sales Transaction Records)
-Tracks payment records, amounts, and Esewa/Khalti Transaction IDs.
-* `id` (INT, Primary Key, Auto Increment)
-* `user_id` (INT) - Foreign Key from `users.id`
-* `items` (TEXT) - Serialized details or JSON string of bought items
-* `total` (DECIMAL(10,2))
-* `transaction_id` (VARCHAR(100)) - Transaction ID from eSewa/Khalti
+Setup (local development only):
 
----
+1. Install PHP 8.1+ with MySQLi and a local MySQL/MariaDB server (XAMPP is one option).
+2. Create schema and seed products with `database.sql`. The database name is **`shoes_store`** (not `sumitra_shoes_db`). It creates a users table, empty admins table, products, and orders.
+3. Configure `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` in your **server environment**. If unset, `config.php` uses local XAMPP development defaults; do not expose that configuration publicly.
+4. Place the repository into the local PHP web root and visit `http://localhost/<folder>/index.php`, or run `php -S 127.0.0.1:8001` from the project directory and open `http://127.0.0.1:8001/index.php`.
+5. Register a new local test account; no administrator credentials are seeded and the admin panel is not implemented.
 
-## 🚀 Step-by-Step Local Setup Instructions
+## Implemented safety improvements
 
-### Prerequisites
-1. Install **XAMPP** (includes Apache Server & MySQL Database) or **WampServer**.
-2. Download this project folder and extract it.
+- Checkout now creates **unpaid** demo orders, not purported payment verifications.
+- Prepared SQL statements are used to read order cart items and insert demo orders.
+- Checkout form includes a session CSRF token; quantities and product IDs are checked.
+- Database connection failures no longer display raw database error details to the browser.
+- The former seeded administrator password and nonexistent admin link are removed.
+- Added responsive `css/style.css`, safe local image fallback and an independently browsable lookbook.
+- GitHub Actions verifies PHP syntax and static website assets.
 
-### Step 1: Place code in Local Server
-Move the project folder into your Web Directory:
-* On XAMPP: `C:/xampp/htdocs/sumitra_shoes/`
-* On Mac/Linux: `/opt/lampp/htdocs/sumitra_shoes/`
+## Known limitations / not for public commerce
 
-### Step 2: Set Up MySQL Database
-1. Launch **XAMPP Control Panel** and start **Apache** and **MySQL**.
-2. Open your web browser and navigate to: `http://localhost/phpmyadmin`
-3. Click on the **Databases** tab, type `sumitra_shoes_db` as the database name, and Click **Create**.
-4. Click on the newly created database, open the **SQL** tab.
-5. Copy and paste the complete content of `schema.sql` (provided in this project) and click **Go**. This creates the tables and inserts sample items (including admin credentials!).
+The `orders.transaction_id` field currently stores an **unpaid demo reference**, not a verified gateway receipt. A production system requires order statuses, transactional inventory handling, independently validated payment webhooks, fraud controls, authentication hardening, CSRF protection on all state-changing operations, secure sessions, user-data privacy policies, database migrations, and end-to-end testing. Do not deploy the PHP demo as an operational payment store.
 
-### Step 3: Run the Website
-Now go to your web browser and navigate to:
-`http://localhost/sumitra_shoes/`
-You can register a customer account or login using sample credentials!
+To keep older local databases working, the existing SQL table structures were not migrated in this update. New deployments should design a proper `payment_status` and separate `merchant_reference` fields before integrating payments.
 
-### Admin Credentials (To test Admin Panel)
-* **Username**: `admin`
-* **Password**: `admin123`
-
----
-
-## ⚡ Gateway Integrations (Esewa & Khalti)
-* **eSewa Integration**: Operates via client post-callbacks towards eSewa's standard merchant sandbox gateway.
-* **Khalti Integration**: Operates via an inline JavaScript handler communicating with the Khalti checkout CDN script, completing validations dynamically.
+**Portfolio:** [Royalpuskar](https://github.com/Royalpuskar)
