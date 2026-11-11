@@ -1,0 +1,35 @@
+name: Verify Sumitra storefront
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: PHP syntax lint
+        run: |
+          for f in *.php; do php -l "$f"; done
+      - name: Static lookbook assets
+        run: |
+          node --check preview.mjs
+          test -s index.html
+          test -s css/style.css
+          test -s images/placeholder.svg
+          grep -q 'src="preview.mjs"' index.html
+      - name: No fake gateway confirmation in demo checkout
+        run: |
+          grep -q 'UNPAID-DEMO-' checkout.php
+          if grep -q 'record_payment' checkout.php; then echo "Legacy fake payment flow present"; exit 1; fi
