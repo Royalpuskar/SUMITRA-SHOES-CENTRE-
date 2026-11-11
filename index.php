@@ -24,13 +24,13 @@ include "config.php";
             <a href="login.php">Login</a>
             <a href="register.php">Register</a>
         <?php endif; ?>
-        <a href="admin/login.php" class="admin-badge">Admin Corner</a>
+        
     </nav>
 </header>
 
 <section class="hero">
-    <h2>Best Shoes Collection</h2>
-    <p>Comfort &bull; Style &bull; Unmatched Quality</p>
+    <h2>Footwear for Every Journey</h2>
+    <p>Comfort &bull; Everyday Style &bull; Local Store Demo</p>
 </section>
 
 <div class="container">
