@@ -87,7 +87,8 @@ if (isset($_GET['category'])) {
                 ?>
                 <div class="product">
                     <!-- Elegant placeholder handles if file not physically found in XAMPP directory -->
-                    <img src="<?php echo (strpos($row['image'], 'http') === 0) ? $row['image'] : 'images/'.$row['image']; ?>" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600';" alt="<?php echo htmlspecialchars($row['name']); ?>">
+                    <?php $src = 'images/' . basename((string)$row['image']); ?>
+                    <img src="<?php echo htmlspecialchars($src, ENT_QUOTES, 'UTF-8'); ?>" onerror="this.onerror=null; this.src='images/placeholder.svg';" alt="<?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?>" loading="lazy">
                     <div class="product-detail">
                         <span class="product-category"><?php echo htmlspecialchars($row['category']); ?></span>
                         <h3><?php echo htmlspecialchars($row['name']); ?></h3>
