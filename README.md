@@ -1,5 +1,15 @@
 # Sumitra Shoes Centre — Footwear Store Prototype
 
+<!-- portfolio-website:start -->
+## Website
+
+[Open SUMITRA-SHOES-CENTRE- website](https://royalpuskar.github.io/SUMITRA-SHOES-CENTRE-/)
+
+Intended GitHub Pages address; deployment has not been verified. If it does not load, GitHub Pages must be enabled for the root of the main branch.
+
+Static lookbook only. PHP/MySQL accounts and demo orders require a separate server; this website does not process payments.
+<!-- portfolio-website:end -->
+
 **A responsive storefront showcase with a PHP/MySQL local demo.**
 
 ## Two project modes
@@ -39,3 +49,10 @@ The `orders.transaction_id` field currently stores an **unpaid demo reference**,
 To keep older local databases working, the existing SQL table structures were not migrated in this update. New deployments should design a proper `payment_status` and separate `merchant_reference` fields before integrating payments.
 
 **Portfolio:** [Royalpuskar](https://github.com/Royalpuskar)
+
+
+<!-- portfolio-rights:start -->
+## Copyright
+
+© 2026 Puskar (Royalpuskar). All rights reserved for original project content, except where an applicable license grants permission. Third-party rights and notices remain with their owners.
+<!-- portfolio-rights:end -->
